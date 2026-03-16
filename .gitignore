@@ -2,3 +2,5 @@ bin/
 *.o
 *.out
 a.out
+.vscode/
+.DS_Store
