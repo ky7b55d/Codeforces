@@ -18,16 +18,22 @@ void solve() {
     int n; cin >> n;
     vector<int> arr(n);
     for (int i=0;i<n;i++) cin >> arr[i];
-    
-    int max=arr[0];
-    int count=0;
+
+    vector<int> newarr;
     for (int i=0;i<n;i++){
-        if (arr[i]<max){
-            count++;
+        if (count(newarr.begin(),newarr.end(),arr[i])==0){
+            newarr.push_back(arr[i]);
         }
-        else {max=arr[i];}
     }
-    cout << count << "\n";
+    int counts=newarr.size();
+
+    if (count(newarr.begin(),newarr.end(),counts)!=0){
+        cout << counts << "\n";
+    }
+    else{
+        sort(newarr.begin(),newarr.end());
+        cout << *upper_bound(newarr.begin(),newarr.end(),counts) << '\n';
+    }
 }
 
 int main() {

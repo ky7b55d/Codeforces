@@ -15,19 +15,32 @@ using namespace std;
 using ll = long long;
 
 void solve() {
-    int n; cin >> n;
-    vector<int> arr(n);
-    for (int i=0;i<n;i++) cin >> arr[i];
+    int n;
+    cin >> n;
+    string s;
+    cin >> s;
     
-    int max=arr[0];
-    int count=0;
-    for (int i=0;i<n;i++){
-        if (arr[i]<max){
-            count++;
+    int firstOne;
+    for (int i = 0; i < n; i++) {
+        if (s[i] == '1') {
+            firstOne = i;
+            break;
         }
-        else {max=arr[i];}
     }
-    cout << count << "\n";
+
+    string t = s.substr(firstOne) + s.substr(0, firstOne);
+
+    int ans = 0, cur = 0;
+    for (char c : t) {
+        if (c == '0') {
+            cur++;
+            ans = max(ans, cur);
+        } else {
+            cur = 0;
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main() {
