@@ -11,9 +11,13 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <chrono>
+#include <random>
 
 using namespace std;
 using ll = long long;
+
+mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
+const uint64_t RND_SHIFT = rng();
 
 uint64_t splitmix64(uint64_t x) {
     x += 0x9e3779b97f4a7c15;
@@ -25,7 +29,7 @@ uint64_t splitmix64(uint64_t x) {
 uint64_t hash_tree(int u, int p, const vector<vector<int>>& adj) {
     uint64_t h = 1;
     for (int v : adj[u]) {
-        if (v != p) h += splitmix64(hash_tree(v, u, adj));
+        if (v != p) h += splitmix64(hash_tree(v, u, adj) ^ RND_SHIFT);
     }
     return h;
 }
