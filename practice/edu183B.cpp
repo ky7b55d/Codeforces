@@ -18,6 +18,11 @@ void solve() {
     int n,k; cin >> n >> k;
     string s; cin >> s;
 
+    if (k==n){
+        cout << string(n,'-') << "\n";
+        return;
+    }
+    
     int c0=0,c1=0,c2=0;
     for (char x:s){
         if (x=='0') c0++;
