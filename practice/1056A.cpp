@@ -13,7 +13,6 @@
 
 using namespace std;
 using ll = long long;
-
 void solve() {
     int n; cin >> n;
     cout << 2*n-2 << "\n";
