@@ -15,45 +15,36 @@ using namespace std;
 using ll = long long;
 
 void solve() {
-    int n;
-    cin >> n;
+    int n;cin>>n;
 
-    vector<ll> a(n + 1);
-    vector<ll> b;
+    vector<ll> a(n),c(n);
 
-    for (int i = 1; i <= n; i++) {
-        cin >> a[i];
-        b.push_back(a[i]);
-    }
+    for(int i=0;i<n;i++)
+        cin >> a[i],c[i]=a[i];
 
-    sort(b.begin(), b.end());
-    ll mid = b[n / 2];
+    sort(c.begin(),c.end());
+    ll mid =c[n/2];
 
-    vector<int> small(n + 1), big(n + 1);
+    vector<int> low(n+1),high(n+1);
 
-    for (int i = 1; i <= n; i++) {
-        small[i] = small[i - 1] + (a[i] < mid);
-        big[i] = big[i - 1] + (a[i] > mid);
-    }
+    for(int i=0;i<n;i++)
+        low[i+1] = low[i]+(a[i]<mid),
+        high[i+1] = high[i]+(a[i]>mid);
 
-    vector<int> dp(n + 1, -1e9);
-    dp[0] = 0;
+    vector<int> dp(n+1,-1000000000);
+    dp[0]=0;
 
-    for (int i = 1; i <= n; i++) {
-        for (int j = 0; j < i; j++) {
-            int len = i - j;
+    for(int r=1;r<=n;r++)
+        for(int l=r-1;l>=0;l-=2) {
+            if(dp[l]<0) continue;
+            int len=r-l;
+            int need= len/2;
+            int lowCnt =low[r]-low[l];
+            int highCnt =high[r]-high[l];
 
-            if (len % 2 == 0) continue;
-            if (dp[j] < 0) continue;
-
-            int lcnt = small[i] - small[j];
-            int gcnt = big[i] - big[j];
-
-            if (lcnt <= len / 2 && gcnt <= len / 2) {
-                dp[i] = max(dp[i], dp[j] + 1);
-            }
+            if(lowCnt <= need && highCnt <= need)
+                dp[r]=max(dp[r], dp[l]+1);
         }
-    }
 
     cout << dp[n] << "\n";
 }
