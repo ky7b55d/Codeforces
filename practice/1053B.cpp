@@ -41,9 +41,8 @@ void solve() {
             paint(current);
         }
         else{
-            ll old=current;
             paint(findp(current+1));
-            current=findp(old+1);
+            current=findp(current+1);
         }
     }
 
