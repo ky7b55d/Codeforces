@@ -14,60 +14,34 @@
 using namespace std;
 using ll = long long;
 
-bool can_ab(string s){
-    string compare1;
+bool can(string s,char first,char second){
+    string compare;
     for (int i=0;i<s.size();i++){
-        if(i%2==0) compare1.push_back('a');
-        else compare1.push_back('b');
+        if(i%2==0) compare.push_back(first);
+        else compare.push_back(second);
     }
-    vector<int> counter1(s.size()+2,0);
+    vector<int> counter(s.size(),0);
     for (int i=0;i<s.size();i++){
-        if(s[i]!=compare1[i]) counter1[i]=1;
-        else counter1[i]=0;
+        if(s[i]!=compare[i]) counter[i]=1;
+        else counter[i]=0;
     }
     int l=-1,r=-1;
-    for (int i=0;i<counter1.size();i++){
-        if(counter1[i]==1){
+    for (int i=0;i<counter.size();i++){
+        if(counter[i]==1){
             if(l==-1) l=i;
             r=i;
         }
     }
     if(l==-1) return true;
     for (int i=l;i<=r;i++){
-        if(counter1[i]==0) return false;
+        if(counter[i]==0) return false;
     }
     return true;
 }
-
-bool can_ba(string s){
-    string compare2;
-    for (int i=0;i<s.size();i++){
-        if(i%2==0) compare2.push_back('b');
-        else compare2.push_back('a');
-    }
-    vector<int> counter2(s.size()+2,0);
-    for (int i=0;i<s.size();i++){
-        if(s[i]!=compare2[i]) counter2[i]=1;
-        else counter2[i]=0;
-    }
-    int l=-1,r=-1;
-    for (int i=0;i<counter2.size();i++){
-        if(counter2[i]==1){
-            if(l==-1) l=i;
-            r=i;
-        }
-    }
-    if(l==-1) return true;
-    for (int i=l;i<=r;i++){
-        if(counter2[i]==0) return false;
-    }
-    return true;
-}
-
 
 void solve() {
     string s; cin >> s;
-    if(can_ab(s) || can_ba(s)) cout << "YES\n";
+    if(can(s,'a','b') || can(s,'b','a')) cout << "YES\n";
     else cout << "NO\n";
 }
 
