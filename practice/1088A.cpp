@@ -15,7 +15,20 @@ using namespace std;
 using ll = long long;
 
 void solve() {
-    
+    int n; cin >> n;
+    vector<int> arr(n);
+    for(int i=0;i<n;i++) cin >> arr[i];
+
+    if(n==1){
+        cout << 1 << "\n";
+    }
+    else{
+        for (int i=0;i<n;i++){
+            cout << 2;
+            if (i!=n) cout << ' ';
+        }
+        cout << "\n";
+    }
 }
 
 int main() {
