@@ -27,6 +27,16 @@ struct Fenwick {
         bit.assign(n+1,0);
     }
 
+
+    int sum(int i) {
+        int res = 0;
+        for (;i>0;i-=i&-i) {
+            res += bit[i];
+            if (res >= MOD) res -= MOD;
+        }
+        return res;
+    }
+
     void add(int i,int v) {
         for (;i<=n;i+=i&-i) {
             bit[i] += v;
@@ -41,15 +51,6 @@ struct Fenwick {
         if (res < 0) res += MOD;
         return res;
     }
-
-    int sum(int i) {
-        int res = 0;
-        for (;i>0;i-=i&-i) {
-            res += bit[i];
-            if (res >= MOD) res -= MOD;
-        }
-        return res;
-    }
 };
 
 struct Fenwick2D {
@@ -58,7 +59,7 @@ struct Fenwick2D {
 
     Fenwick2D() {}
 
-    Fenwick2D(int n, vector<int>& tin) {
+    Fenwick2D(int n,vector<int>& tin) {
         this->n = n;
         ys.assign(n+1,{});
         bit.assign(n+1,{});
@@ -76,15 +77,6 @@ struct Fenwick2D {
         }
     }
 
-    void addOne(int idx,int pos,int val) {
-        int p = lower_bound(ys[idx].begin(),ys[idx].end(),pos) - ys[idx].begin() + 1;
-        for (;p<(int)bit[idx].size();p+=p&-p) {
-            bit[idx][p] += val;
-            if (bit[idx][p] >= MOD) bit[idx][p] -= MOD;
-        }
-    }
-
-
 
     int sumOne(int idx,int pos) {
         int p = upper_bound(ys[idx].begin(),ys[idx].end(),pos) - ys[idx].begin();
@@ -94,6 +86,20 @@ struct Fenwick2D {
             if (res >= MOD) res -= MOD;
         }
         return res;
+    }
+
+    void addOne(int idx,int pos,int val) {
+        int p = lower_bound(ys[idx].begin(),ys[idx].end(),pos) - ys[idx].begin() + 1;
+        for (;p<(int)bit[idx].size();p+=p&-p) {
+            bit[idx][p] += val;
+            if (bit[idx][p] >= MOD) bit[idx][p] -= MOD;
+        }
+    }
+
+    void add(int x,int pos,int val) {
+        for (int i=x;i<=n;i+=i&-i) {
+            addOne(i,pos,val);
+        }
     }
 
     int pref(int x,int l,int r) {
@@ -106,12 +112,6 @@ struct Fenwick2D {
             if (res >= MOD) res -= MOD;
         }
         return res;
-    }
-
-    void add(int x,int pos,int val) {
-        for (int i=x;i<=n;i+=i&-i) {
-            addOne(i,pos,val);
-        }
     }
 
     int query(int l,int r,int ql,int qr) {
@@ -158,8 +158,7 @@ void solve() {
         }
     }
 
-    vector<vector<int>> child(n+1);
-    vector<int> tin(n+1), tout(n+1), mx(n+1), it(n+1,0);
+    vector<int> tin(n+1), tout(n+1), it(n+1,0);
     int timer = 0;
 
     stack<int> st;
@@ -167,7 +166,7 @@ void solve() {
 
     while (!st.empty()) {
         int v = st.top();
-        if (!it[v]) tin[v] = ++timer;
+        if (it[v] == 0) tin[v] = ++timer;
 
         if (it[v] == (int)g[v].size()) {
             tout[v] = timer;
@@ -179,6 +178,9 @@ void solve() {
         if (to == par[v]) continue;
         st.push(to);
     }
+
+    vector<vector<int>> child(n+1);
+    vector<int> mx(n+1);
 
     for (int i=n-1;i>=0;i--) {
         int v = order[i];
@@ -215,16 +217,23 @@ void solve() {
         sub.add(y,tin[y],dp[y]);
     }
 
-    vector<int> roots;
-    for (int c : child[n]) roots.push_back(mx[c]);
+    int mx1 = 0, mx2 = 0;
+
+    for (int c : child[n]) {
+        int x = mx[c];
+        if (x > mx1) {
+            mx2 = mx1;
+            mx1 = x;
+        } else if (x > mx2) {
+            mx2 = x;
+        }
+    }
 
     int ans = 0;
 
     for (int c : child[n]) {
-        int need = 1;
-        for (int x : roots) {
-            if (x != mx[c]) need = max(need,x);
-        }
+        int need = mx[c] == mx1 ? mx2 : mx1;
+        need = max(need,1);
 
         int cur = sub.query(need,n-1,tin[c],tout[c]);
         ans += cur;
