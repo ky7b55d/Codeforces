@@ -12,7 +12,6 @@
 #include <unordered_set>
 
 using namespace std;
-
 using ll = long long;
 
 void solve() {
